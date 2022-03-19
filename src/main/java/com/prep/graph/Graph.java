@@ -1,6 +1,8 @@
 package com.prep.graph;
 
+import com.prep.queue.MyQueue;
 import com.prep.stack.Stack;
+import java.util.Queue;
 import lombok.Data;
 
 @Data
@@ -11,12 +13,14 @@ public class Graph {
     Vertex[] vertexList;
     private int curN;
     private Stack stack;
+    private MyQueue queue;
 
     public Graph() {
         vertexList = new Vertex[maxN];
         mas = new int[maxN][maxN];
         curN = 0;
         stack = new Stack();
+        queue = new MyQueue();
     }
 
     public void addVertex(char name) {
@@ -57,7 +61,25 @@ public class Graph {
         for (int i = 0; i < curN; i++) {
             vertexList[i].isVisited = false;
         }
+    }
 
+    public void widthFirst(int index) {
+        System.out.println(vertexList[index].name);
+        vertexList[index].isVisited = true;
+        queue.insert(index);
+
+        int vertex;
+        while (!queue.isEmpty()) {
+            int temp = queue.remove();
+            while ((vertex = check(temp)) != -1) {
+                System.out.println(vertexList[vertex].name);
+                vertexList[vertex].isVisited = true;
+                queue.insert(vertex);
+            }
+        }
+        for (int i = 0; i < curN; i++) {
+            vertexList[i].isVisited = false;
+        }
     }
 
     @Data
@@ -87,7 +109,8 @@ public class Graph {
         graph.addEdge(0, 4, 1); //AE
         graph.addEdge(4, 5, 1); //EF
 
-        graph.deepFirst(0);
+//        graph.deepFirst(0);
+        graph.widthFirst(0);
 
     }
 }
